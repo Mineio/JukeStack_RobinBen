@@ -1,0 +1,39 @@
+.availableSongs {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+.songList {
+    width: 700px;
+    height: auto;
+    border: 1px solid black;
+    margin: 10px;
+    display: flex;
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .songList h3 {
+    margin: 20px;
+  }
+  .button{
+    display: flex;
+    align-items: right;
+    width: 100%;
+  }
+
+#wrapper {
+    width: 500px;
+    border: 1px solid black;
+    overflow: hidden; /* will contain if #first is longer than #second */
+}
+#songList {
+    width: 300px;
+    float:left; /* add this */
+    border: 1px solid red;
+}
+#second {
+    border: 1px solid green;
+    float: left;  /* if you don't want #second to wrap below #first */
+}

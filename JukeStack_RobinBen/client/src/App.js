@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState } from "react";
 import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   // states for registering
@@ -14,6 +15,8 @@ function App() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
+  // states for redirecting
+  const navigate = useNavigate();
 
   const register = () => {
     Axios.post("http://localhost:3001/register", {
@@ -31,19 +34,22 @@ function App() {
       Email: loginEmail,
       Password: loginPassword,
     }).then((response) => {
-      if (response.data.length < 1) {
+      if (response.data.message) {
         setLoginStatus("Email oder Passwort falsch");
       } else {
-        setLoginStatus(response.data[0].UserEmail);
+        setLoginStatus("Eingeloggt als " + response.data[0].UserEmail);
+        navigate("/home");
+         
       }
     });
   };
+  
 
-  const getUsers = () => {
+  /*const getUsers = () => {
     Axios.get("http://localhost:3001/users").then((response) => {
-      setUserList(response.data);
+      setUserList(response.data); 
     });
-  };
+  };*/
 
   return (
     <div className="App">
@@ -78,9 +84,8 @@ function App() {
         />
         <button onClick={register}>Registrieren</button>
       </div>
-
       <div className="Login">
-        <h1>Login</h1>
+        <h2>Login</h2>
         <input
           type="text"
           placeholder="Email..."
@@ -98,13 +103,6 @@ function App() {
         <button onClick={login}>Login</button>
       </div>
 
-      <div className="benutzer">
-        <button onClick={getUsers}>Zeige Benutzer</button>
-
-        {userList.map((val, key) => {
-          return <div> {val.UserVorname}</div>;
-        })}
-      </div>
       <h1>{loginStatus}</h1>
     </div>
   );
