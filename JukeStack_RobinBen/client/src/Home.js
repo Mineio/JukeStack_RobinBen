@@ -4,14 +4,6 @@ import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
-  // states for songs
-  const [SongName, setSongName] = useState("");
-  const [SongArtist, setSongArtist] = useState("");
-  const [SongLength, setSongLength] = useState(0.0); // decimal(4,2)
-  const [SongYear, setSongYear] = useState(""); // char(4)
-  //
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
   // const for displaying the songs
   const [songList, setSongList] = useState([]);
   // states for ausleihen
@@ -32,9 +24,6 @@ function Home() {
     Axios.get("http://localhost:3001/borrows?UserID=" + UserID).then(
       (response) => {
         //console.log(response);
-        if(response.data.length > 5){
-          
-        }
         if (response.data.length == 5) {
           setSongID2(response.data[0].SongID);
           setSongID3(response.data[1].SongID);
@@ -53,8 +42,10 @@ function Home() {
         } else if (response.data.length == 2) {
           setSongID2(response.data[0].SongID);
           setSongID3(response.data[1].SongID);
-        } else {
+        } else if (response.data.length == 1) {
           setSongID2(response.data[0].SongID);
+        } else {
+        
         }
       }
     );
@@ -72,15 +63,22 @@ function Home() {
         SongID5 +
         "&SongID6=" +
         SongID6
-    ).then((response) => {
+    ).then((response) => {if(response.data.length > 0){
       setRentedList(response.data);
+    }else{
+      setRentedList(["None"]);
+    }
     });
   };
+  //ZURÜCKGEBEN
   const weg = (id) => {
-    Axios.delete("http://localhost:3001/delete?id="+id).then((response)=> {
-      getActualRentedSongs();
-    })
-  }
+    Axios.delete("http://localhost:3001/delete?id=" + id).then(
+      (response) => {}
+    );
+    //window.location.reload();
+    getAvailableSongs();
+    getActualRentedSongs();
+  };
   const getAvailableSongs = () => {
     Axios.get("http://localhost:3001/songs").then((response) => {
       setSongList(response.data);
@@ -91,6 +89,16 @@ function Home() {
     Axios.get("http://localhost:3001/userdata").then((response) => {
       setUserID(response.data[0].UserID);
     });
+  };
+  //AUSLEIHEN
+  const checkSongAmount = () => {
+    let underFive = true;
+    Axios.get("http://localhost:3001/usersongs").then((response) => {
+      if (response.data.length >= 5) {
+        underFive = false;
+      }
+    });
+    return underFive;
   };
   const ausleihen = (id) => {
     var date = new Date();
@@ -110,26 +118,31 @@ function Home() {
     setAuslTime(formattedDate);
     getUserID();
     setSongID(id);
-
-    Axios.post("http://localhost:3001/ausleihen", {
-      AuslTime: AuslTime,
-      UserID: UserID,
-      SongID: SongID,
-    }).then((response) => {
-      if (response) {
-        console.log(response);
-      }
-    });
+    let underFive = checkSongAmount();
+    if (underFive == true) {
+      Axios.post("http://localhost:3001/ausleihen", {
+        AuslTime: AuslTime,
+        UserID: UserID,
+        SongID: SongID,
+      }).then((response) => {
+        if (response) {
+          console.log(response);
+        }
+      });
+      getActualRentedSongs();
+      getAvailableSongs();
+    } else {
+      alert("Du kannst nur 5 Songs ausleihen");
+    }
   };
-
+  window.onload = getAvailableSongs();
   return (
     <div className="home">
       <div className="availableSongs">
-        <button onClick={getAvailableSongs}> Verfügbare Songs anzeigen </button>
         <button onClick={getActualRentedSongs}>
-          
           Ausgeliehene Songs anzeigen
         </button>
+
         <div id="Wrapper">
           <div id="First">
             {songList.map((val, key) => {
@@ -155,6 +168,7 @@ function Home() {
             {RentedList.map((val, key) => {
               return (
                 <div className="RentedList">
+                  <h2>Ausgeliehene Songs</h2>
                   <div>
                     <h3>{val.SongName}</h3>
                     <h3>{val.SongArtist}</h3>

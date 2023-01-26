@@ -40,17 +40,21 @@ app.get("/actual", (req, res) => {
   const SongID5 = req.query.SongID5;
   const SongID6 = req.query.SongID6;
 
-  db.query("SELECT * FROM TNFTSongs WHERE SongID IN (?,?,?,?,?)", [SongID2,SongID3,SongID4,SongID5,SongID6], (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
+  db.query(
+    "SELECT * FROM TNFTSongs WHERE SongID IN (?,?,?,?,?)",
+    [SongID2, SongID3, SongID4, SongID5, SongID6],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
     }
-  });
+  );
 });
 app.get("/borrows", (req, res) => {
   const UserID = req.query.UserID;
-  console.log(UserID);
+  //console.log(UserID);
   db.query(
     "SELECT * FROM TAusgelieheneSongs WHERE UserID = ?",
     [UserID],
@@ -59,7 +63,7 @@ app.get("/borrows", (req, res) => {
         console.log(err);
       } else {
         res.send(result);
-        console.log(result);
+        //console.log(result);
       }
     }
   );
@@ -67,6 +71,7 @@ app.get("/borrows", (req, res) => {
 app.post("/ausleihen", (req, res) => {
   const AuslTime = req.body.AuslTime;
   const UserID = req.body.UserID;
+  userID = UserID;
   const SongID = req.body.SongID;
   db.query(
     "INSERT INTO TAusgelieheneSongs (AuslTime,UserID,SongID) VALUES(?,?,?)",
@@ -110,16 +115,20 @@ app.get("/userdata", (req, res) => {
     }
   );
 });
-app.delete("/delete",(req,res)=>{
+app.delete("/delete", (req, res) => {
   const id = req.query.id;
-  db.query("DELETE FROM TAusgelieheneSongs WHERE SongID = ?",[id], (err,result)=> {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send("values deleted");
+  db.query(
+    "DELETE FROM TAusgelieheneSongs WHERE SongID = ?",
+    [id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("values deleted");
+      }
     }
-  })
-})
+  );
+});
 app.post("/login", (req, res) => {
   const Email = req.body.Email;
   const Password = req.body.Password;
@@ -139,6 +148,44 @@ app.post("/login", (req, res) => {
       }
     }
   );
+});
+let userID;
+app.get("/usersongs", (req, res) => {
+  db.query(
+    "SELECT SongID FROM TAusgelieheneSongs WHERE UserID = ?",
+    [userID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+app.get("/getSongIDs", (req, res) => {
+  const UserID = req.query.UserID;
+  db.query(
+    "SELECT * FROM TNFTSongs WHERE SongID IN (SELECT SongID FROM TAusgelieheneSongs WHERE UserID = ?)",
+    [UserID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+app.get("/getUsers", (req, res) => {
+  db.query("SELECT * FROM TUsers", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
 });
 
 app.listen(3001, () => {

@@ -36,20 +36,17 @@ function App() {
     }).then((response) => {
       if (response.data.message) {
         setLoginStatus("Email oder Passwort falsch");
-      } else {
+      } else if(response.data[0].UserID != 1000){
         setLoginStatus("Eingeloggt als " + response.data[0].UserEmail);
         navigate("/home");
-         
+      }else{
+        navigate("/Adminpage");
       }
     });
   };
   
 
-  /*const getUsers = () => {
-    Axios.get("http://localhost:3001/users").then((response) => {
-      setUserList(response.data); 
-    });
-  };*/
+
 
   return (
     <div className="App">
