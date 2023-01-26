@@ -45,7 +45,6 @@ function Home() {
         } else if (response.data.length == 1) {
           setSongID2(response.data[0].SongID);
         } else {
-        
         }
       }
     );
@@ -63,11 +62,12 @@ function Home() {
         SongID5 +
         "&SongID6=" +
         SongID6
-    ).then((response) => {if(response.data.length > 0){
-      setRentedList(response.data);
-    }else{
-      setRentedList(["None"]);
-    }
+    ).then((response) => {
+      if (response.data.length > 0) {
+        setRentedList(response.data);
+      } else {
+        setRentedList(["None"]);
+      }
     });
   };
   //ZURÜCKGEBEN
@@ -138,11 +138,10 @@ function Home() {
   window.onload = getAvailableSongs();
   return (
     <div className="home">
+      <button className="anzeigen" onClick={getActualRentedSongs}>
+        Ausgeliehene Songs anzeigen
+      </button>
       <div className="availableSongs">
-        <button onClick={getActualRentedSongs}>
-          Ausgeliehene Songs anzeigen
-        </button>
-
         <div id="Wrapper">
           <div id="First">
             {songList.map((val, key) => {
@@ -164,11 +163,11 @@ function Home() {
               );
             })}
           </div>
+          
           <div id="Second">
             {RentedList.map((val, key) => {
               return (
                 <div className="RentedList">
-                  <h2>Ausgeliehene Songs</h2>
                   <div>
                     <h3>{val.SongName}</h3>
                     <h3>{val.SongArtist}</h3>

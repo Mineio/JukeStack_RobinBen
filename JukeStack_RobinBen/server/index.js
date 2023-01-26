@@ -141,7 +141,7 @@ app.post("/login", (req, res) => {
         res.send({ err: err });
       }
       if (result.length > 0) {
-        res.send(result);
+        res.send(result);   
         email = Email;
       } else {
         res.send({ message: "Falsche Anmeldedaten" });

@@ -29,48 +29,50 @@ function Adminpage() {
 
   window.onload = displayUsers();
   return (
-    <div>
-      <div id="First">
-        {userList.map((val, key) => {
-          return (
-            <div className="userList">
-              <div>
-                <h3>{val.UserVorname}</h3>
-                <h3>{val.UserNachname}</h3>
-                <h3>{val.UserEmail}</h3>
+    <div className="Adminpage">
+      <div id="Wrapper">
+        <div id="First">
+          {userList.map((val, key) => {
+            return (
+              <div className="userList">
+                <div>
+                  <h3>{val.UserVorname}</h3>
+                  <h3>{val.UserNachname}</h3>
+                  <h3>{val.UserEmail}</h3>
+                </div>
+                <button
+                  className="selectUser"
+                  onClick={() => {
+                    getSongIDs(val.UserID);
+                  }}
+                >
+                  Ausleihen anzeigen
+                </button>
               </div>
-              <button
-                className="selectUser"
-                onClick={() => {
-                  getSongIDs(val.UserID);
-                }}
-              >
-                Ausleihen anzeigen
-              </button>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
 
-      <div>
-        {songList.map((val, key) => {
-          return (
-            <div className="songList">
-              <div>
-                <h3>{val.SongName}</h3>
-                <h3>{val.SongArtist}</h3>
+        <div id="Second">
+          {songList.map((val, key) => {
+            return (
+              <div className="songList">
+                <div>
+                  <h3>{val.SongName}</h3>
+                  <h3>{val.SongArtist}</h3>
+                </div>
+                <button
+                  className="removeSong"
+                  onClick={() => {
+                    weg(val.SongID);
+                  }}
+                >
+                  Song zurückgeben
+                </button>
               </div>
-              <button
-                className="removeSong"
-                onClick={() => {
-                  weg(val.SongID);
-                }}
-              >
-                Song zurückgeben
-              </button>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

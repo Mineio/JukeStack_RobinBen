@@ -9,8 +9,6 @@ function App() {
   const [Name, setName] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  // states for displaying all Users
-  const [userList, setUserList] = useState([]);
   // states for Login
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -25,7 +23,7 @@ function App() {
       Email: Email,
       Password: Password,
     }).then((response) => {
-      console.log("sucess");
+      console.log("registered");
     });
   };
 
@@ -36,45 +34,47 @@ function App() {
     }).then((response) => {
       if (response.data.message) {
         setLoginStatus("Email oder Passwort falsch");
-      } else if(response.data[0].UserID != 1000){
+      } else if (response.data[0].UserID != 1000) {
         setLoginStatus("Eingeloggt als " + response.data[0].UserEmail);
         navigate("/home");
-      }else{
+      } else {
         navigate("/Adminpage");
       }
     });
   };
-  
-
-
 
   return (
     <div className="App">
       <div className="Inputs">
-        <label>Vorname</label>
+        <h2>Registrieren</h2>
+       
         <input
           type="text"
+          placeholder="Vorname..."
           onChange={(event) => {
             setSurname(event.target.value);
           }}
         />
-        <label>Nachname</label>
+        
         <input
           type="text"
+          placeholder="Nachname..."
           onChange={(event) => {
             setName(event.target.value);
           }}
         />
-        <label>E-Mail</label>
+        
         <input
           type="text"
+          placeholder="Email..."
           onChange={(event) => {
             setEmail(event.target.value);
           }}
         />
-        <label>Passwort</label>
+        
         <input
           type="password"
+          placeholder="Passwort..."
           onChange={(event) => {
             setPassword(event.target.value);
           }}
